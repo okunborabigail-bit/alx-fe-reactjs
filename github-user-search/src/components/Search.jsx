@@ -1,14 +1,17 @@
 import { useState } from "react";
 import fetchUserData from "../services/githubService";
+
 function Search() {
   const [username, setUsername] = useState("");
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(false);
+
     try {
       const data = await fetchUserData(username);
       setUser(data);
@@ -19,6 +22,7 @@ function Search() {
       setLoading(false);
     }
   };
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -30,8 +34,9 @@ function Search() {
         />
         <button type="submit">Search</button>
       </form>
+
       {loading && <p>Loading...</p>}
-      {error && <p>Looks like we can’t find the user</p>}
+      {error && <p>Looks like we cant find the user</p>}
       {user && (
         <div>
           <img src={user.avatar_url} alt={user.login} width="100" />
@@ -42,4 +47,5 @@ function Search() {
     </div>
   );
 }
+
 export default Search;
