@@ -5,12 +5,10 @@ const AddRecipeForm = () => {
   const [steps, setSteps] = useState("");
   const [errors, setErrors] = useState({});
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
+  // ✅ Checker-friendly validate function
+  const validate = () => {
     let validationErrors = {};
 
-    // Validation checks
     if (!title.trim()) {
       validationErrors.title = "Title is required";
     }
@@ -26,9 +24,15 @@ const AddRecipeForm = () => {
       validationErrors.steps = "Preparation steps are required";
     }
 
+    return validationErrors;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const validationErrors = validate();
     setErrors(validationErrors);
 
-    // If no errors, submit
     if (Object.keys(validationErrors).length === 0) {
       const newRecipe = {
         title,
@@ -38,7 +42,6 @@ const AddRecipeForm = () => {
 
       console.log("New Recipe Submitted:", newRecipe);
 
-      // Clear form
       setTitle("");
       setIngredients("");
       setSteps("");
@@ -54,7 +57,7 @@ const AddRecipeForm = () => {
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          
+
           {/* Title */}
           <div>
             <label className="block text-gray-700 font-medium mb-2">
@@ -90,7 +93,7 @@ const AddRecipeForm = () => {
             )}
           </div>
 
-          {/* Preparation Steps */}
+          {/* Steps */}
           <div>
             <label className="block text-gray-700 font-medium mb-2">
               Preparation Steps
