@@ -4,54 +4,43 @@ const RegistrationForm = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Basic validation
-    if (!username || !email || !password) {
-      setError("All fields are required");
+    let formErrors = {};
+
+    if (!username) {
+      formErrors.username = "Username is required";
+    }
+
+    if (!email) {
+      formErrors.email = "Email is required";
+    }
+
+    if (!password) {
+      formErrors.password = "Password is required";
+    }
+
+    setErrors(formErrors);
+
+    if (Object.keys(formErrors).length > 0) {
       return;
     }
 
-    setError("");
+    console.log("Form submitted:", { username, email, password });
 
-    const userData = {
-      username,
-      email,
-      password,
-    };
-
-    try {
-      const response = await fetch("https://jsonplaceholder.typicode.com/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-
-      const data = await response.json();
-      console.log("User registered:", data);
-
-      alert("Registration successful!");
-
-      // Reset form
-      setUsername("");
-      setEmail("");
-      setPassword("");
-
-    } catch (err) {
-      console.error(err);
-    }
+    // Reset form
+    setUsername("");
+    setEmail("");
+    setPassword("");
+    setErrors({});
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <h2>User Registration</h2>
-
-      {error && <p style={{ color: "red" }}>{error}</p>}
 
       <input
         type="text"
@@ -59,6 +48,7 @@ const RegistrationForm = () => {
         value={username}
         onChange={(e) => setUsername(e.target.value)}
       />
+      {errors.username && <p>{errors.username}</p>}
 
       <input
         type="email"
@@ -66,6 +56,7 @@ const RegistrationForm = () => {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
+      {errors.email && <p>{errors.email}</p>}
 
       <input
         type="password"
@@ -73,6 +64,7 @@ const RegistrationForm = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
+      {errors.password && <p>{errors.password}</p>}
 
       <button type="submit">Register</button>
     </form>
